@@ -75,7 +75,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         when (scanResults) {
             is WifiScanRepository.State.Success -> {
                 WifiCardList(
-                    scanResults = scanResults.scanResults,
+                    scanResults = scanResults.scanResults.sortedBy { it.SSID },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -109,6 +109,13 @@ fun WifiCard(scanResult: ScanResult) {
         Column {
             Text("SSID: ${scanResult.SSID}")
             Text("BSSID: ${scanResult.BSSID}")
+            Text("capabilities: ${scanResult.capabilities}")
+            Text("centerFreq0: ${scanResult.centerFreq0}")
+            Text("centerFreq1: ${scanResult.centerFreq1}")
+            Text("channelWidth: ${scanResult.channelWidth}")
+            Text("frequency: ${scanResult.frequency}")
+            Text("level: ${scanResult.level}")
         }
     }
 }
+
