@@ -40,7 +40,8 @@ class WifiScanRepository @Inject constructor(
     val scanResults: StateFlow<State?> = _scanResults
 
     fun startScan() {
-        _scanResults.value = State.Loading
+        val prevScanResult = _scanResults.value
+        _scanResults.value = State.Loading(prevScanResults = (prevScanResult as? State.Success)?.scanResults ?: emptyList())
         wifiManager.startScan()
     }
 
@@ -55,7 +56,7 @@ class WifiScanRepository @Inject constructor(
     }
 
     sealed class State {
-        object Loading : State()
+        data class Loading(val prevScanResults: List<ScanResult>) : State()
         object Failure : State()
         data class Success(val scanResults: List<ScanResult>) : State()
     }
