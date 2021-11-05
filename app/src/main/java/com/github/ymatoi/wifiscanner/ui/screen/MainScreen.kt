@@ -11,12 +11,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,19 +26,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import com.github.ymatoi.wifiscanner.repository.WifiScanRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
+import com.github.ymatoi.wifiscanner.ui.composables.WifiCard
 import timber.log.Timber
-import javax.inject.Inject
-
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    private val wifiScanRepository: WifiScanRepository
-) : ViewModel() {
-    val scanResults = wifiScanRepository.scanResults
-    fun scan() = wifiScanRepository.startScan()
-}
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
@@ -68,12 +57,14 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
 
     val scanResults = viewModel.scanResults.collectAsState()
+    val buttonEnableState = viewModel.buttonEnableState.collectAsState(initial = true)
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val scanResults = scanResults.value
         when (scanResults) {
@@ -93,7 +84,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 ) {
                     WifiCardList(
                         scanResults = scanResults.prevScanResults,
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
                     )
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -104,7 +97,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 }
             }
         }
-        Button(onClick = onClickScan) {
+        Button(onClick = onClickScan, enabled = buttonEnableState.value) {
             Text("Scan")
         }
     }
@@ -117,28 +110,7 @@ fun WifiCardList(
 ) {
     LazyColumn(modifier = modifier) {
         items(scanResults) {
-            WifiCard(it)
-        }
-    }
-}
-
-@Composable
-fun WifiCard(scanResult: ScanResult) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        elevation = 10.dp
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text("SSID: ${scanResult.SSID}")
-            Text("BSSID: ${scanResult.BSSID}")
-            Text("capabilities: ${scanResult.capabilities}")
-            Text("centerFreq0: ${scanResult.centerFreq0}")
-            Text("centerFreq1: ${scanResult.centerFreq1}")
-            Text("channelWidth: ${scanResult.channelWidth}")
-            Text("frequency: ${scanResult.frequency}")
-            Text("level: ${scanResult.level}")
+            WifiCard(ScanResultState.create(it))
         }
     }
 }
