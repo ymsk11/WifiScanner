@@ -3,6 +3,7 @@ package com.github.ymatoi.wifiscanner.ui.composables
 import android.net.wifi.ScanResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -39,10 +40,18 @@ fun WifiCard(state: ScanResultState) {
             .fillMaxWidth(),
         elevation = 10.dp
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text("SSID: ${state.ssid} (${state.hz})")
-            Text("BSSID: ${state.bssid}")
-            Text("level: ${state.level}")
+        Column {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text("SSID: ${state.ssid} (${state.hz})")
+                Text("BSSID: ${state.bssid}")
+                Text("level: ${state.level}")
+            }
+            WifiLevelMeter(
+                level = state.level,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+            )
         }
     }
 }
