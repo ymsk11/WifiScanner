@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,6 +57,15 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val isLoading = viewModel.isLoading
     val scanResultStates = viewModel.scanResultStates
 
+    MainScreen(
+        isLoading = isLoading.value,
+        scanResultStates = scanResultStates.value,
+        onClickScan = onClickScan
+    )
+}
+
+@Composable
+fun MainScreen(isLoading: Boolean, scanResultStates: List<ScanResultState>, onClickScan: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -68,13 +78,16 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            WifiCardList(
-                scanResultStates = scanResultStates.value,
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-            )
-            if (isLoading.value) {
+            ) {
+                items(scanResultStates) {
+                    WifiCard(state = it)
+                }
+            }
+            if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .width(48.dp)
@@ -83,20 +96,28 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 )
             }
         }
-        Button(onClick = onClickScan, enabled = isLoading.value.not()) {
+        Button(onClick = onClickScan, enabled = isLoading.not()) {
             Text("Scan")
         }
     }
 }
 
+@Preview
 @Composable
-fun WifiCardList(
-    scanResultStates: List<ScanResultState>,
-    modifier: Modifier
-) {
-    LazyColumn(modifier = modifier) {
-        items(scanResultStates) {
-            WifiCard(it)
-        }
-    }
+fun PreviewMainScreen() {
+    MainScreen(
+        isLoading = false,
+        scanResultStates = emptyList(),
+        onClickScan = {}
+    )
+}
+
+@Preview
+@Composable
+fun PreviewMainScreenLoading() {
+    MainScreen(
+        isLoading = true,
+        scanResultStates = emptyList(),
+        onClickScan = {}
+    )
 }
