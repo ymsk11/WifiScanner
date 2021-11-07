@@ -14,16 +14,40 @@ fun WifiLevelMeter(level: Int, modifier: Modifier = Modifier) {
     LinearProgressIndicator(
         progress = progress,
         modifier = modifier,
-        color = Color.Green,
+        color = when {
+            level > -50 -> Color.Green
+            level > -70 -> Color.Yellow
+            else -> Color.Red
+        },
         backgroundColor = Color.Gray
     )
 }
 
 @Preview
 @Composable
-fun PreviewWifiLevelMeter() {
+fun PreviewWifiLevelMeterLow() {
     WifiLevelMeter(
-        level = -50,
+        level = -90,
+        modifier = Modifier
+            .height(24.dp)
+    )
+}
+
+@Preview
+@Composable
+fun PreviewWifiLevelMeterMiddle() {
+    WifiLevelMeter(
+        level = -60,
+        modifier = Modifier
+            .height(24.dp)
+    )
+}
+
+@Preview
+@Composable
+fun PreviewWifiLevelMeterHigh() {
+    WifiLevelMeter(
+        level = -30,
         modifier = Modifier
             .height(24.dp)
     )
