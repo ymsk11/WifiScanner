@@ -19,6 +19,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,8 +58,8 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
 
     val isLoading = viewModel.isLoading
-    val scanResultStates = viewModel.scanResultStates
-    val searchKeyword = viewModel.searchKeyword
+    val scanResultStates = viewModel.scanResultStates.collectAsState(initial = emptyList())
+    val searchKeyword = viewModel.searchKeyword.collectAsState()
 
     MainScreen(
         isLoading = isLoading.value,
@@ -87,7 +88,9 @@ fun MainScreen(
         TextField(
             value = searchKeyword,
             onValueChange = onValueSearchKeywordChange,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                .fillMaxWidth()
         )
         Box(
             modifier = Modifier
