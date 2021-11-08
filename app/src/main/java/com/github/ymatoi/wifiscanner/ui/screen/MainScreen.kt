@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,16 +58,25 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
 
     val isLoading = viewModel.isLoading
     val scanResultStates = viewModel.scanResultStates
+    val searchKeyword = viewModel.searchKeyword
 
     MainScreen(
         isLoading = isLoading.value,
         scanResultStates = scanResultStates.value,
-        onClickScan = onClickScan
+        onClickScan = onClickScan,
+        searchKeyword = searchKeyword.value,
+        onValueSearchKeywordChange = { text -> viewModel.updateSearchKeyword(text) }
     )
 }
 
 @Composable
-fun MainScreen(isLoading: Boolean, scanResultStates: List<ScanResultState>, onClickScan: () -> Unit) {
+fun MainScreen(
+    searchKeyword: String,
+    onValueSearchKeywordChange: (text: String) -> Unit,
+    isLoading: Boolean,
+    scanResultStates: List<ScanResultState>,
+    onClickScan: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -73,6 +84,11 @@ fun MainScreen(isLoading: Boolean, scanResultStates: List<ScanResultState>, onCl
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        TextField(
+            value = searchKeyword,
+            onValueChange = onValueSearchKeywordChange,
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp).fillMaxWidth()
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +124,9 @@ fun PreviewMainScreen() {
     MainScreen(
         isLoading = false,
         scanResultStates = emptyList(),
-        onClickScan = {}
+        onClickScan = {},
+        searchKeyword = "text",
+        onValueSearchKeywordChange = {}
     )
 }
 
@@ -118,6 +136,8 @@ fun PreviewMainScreenLoading() {
     MainScreen(
         isLoading = true,
         scanResultStates = emptyList(),
-        onClickScan = {}
+        onClickScan = {},
+        searchKeyword = "text",
+        onValueSearchKeywordChange = {}
     )
 }

@@ -23,6 +23,13 @@ class MainViewModel @Inject constructor(
     private val _scanResultStates: MutableState<List<ScanResultState>> = mutableStateOf(emptyList())
     val scanResultStates: State<List<ScanResultState>> = _scanResultStates
 
+    private val _searchKeyword = mutableStateOf("")
+    val searchKeyword: State<String> = _searchKeyword
+
+    fun updateSearchKeyword(text: String) {
+        _searchKeyword.value = text
+    }
+
     init {
         wifiScanRepository.scanResults.onEach {
             when (it) {
