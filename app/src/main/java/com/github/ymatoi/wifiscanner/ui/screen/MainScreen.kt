@@ -5,18 +5,12 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +24,8 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
 import com.github.ymatoi.wifiscanner.ui.composables.WifiCard
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import timber.log.Timber
 
 @Composable
@@ -46,7 +42,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
     val context = LocalContext.current
 
-    val onClickScan = {
+    val onRefresh = {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 viewModel.scan()
@@ -62,9 +58,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val searchKeyword = viewModel.searchKeyword.collectAsState()
 
     MainScreen(
-        isLoading = isLoading.value,
+        isRefreshing = isLoading.value,
         scanResultStates = scanResultStates.value,
-        onClickScan = onClickScan,
+        onRefresh = onRefresh,
         searchKeyword = searchKeyword.value,
         onValueSearchKeywordChange = { text -> viewModel.updateSearchKeyword(text) }
     )
@@ -74,9 +70,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
 fun MainScreen(
     searchKeyword: String,
     onValueSearchKeywordChange: (text: String) -> Unit,
-    isLoading: Boolean,
+    isRefreshing: Boolean,
     scanResultStates: List<ScanResultState>,
-    onClickScan: () -> Unit
+    onRefresh: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -92,11 +88,7 @@ fun MainScreen(
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 .fillMaxWidth()
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
+        SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing), onRefresh = onRefresh) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,17 +98,6 @@ fun MainScreen(
                     WifiCard(state = it)
                 }
             }
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(48.dp)
-                        .height(48.dp)
-                        .align(Alignment.Center)
-                )
-            }
-        }
-        Button(onClick = onClickScan, enabled = isLoading.not()) {
-            Text("Scan")
         }
     }
 }
@@ -125,9 +106,9 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen() {
     MainScreen(
-        isLoading = false,
+        isRefreshing = false,
         scanResultStates = emptyList(),
-        onClickScan = {},
+        onRefresh = {},
         searchKeyword = "text",
         onValueSearchKeywordChange = {}
     )
@@ -137,9 +118,9 @@ fun PreviewMainScreen() {
 @Composable
 fun PreviewMainScreenLoading() {
     MainScreen(
-        isLoading = true,
+        isRefreshing = true,
         scanResultStates = emptyList(),
-        onClickScan = {},
+        onRefresh = {},
         searchKeyword = "text",
         onValueSearchKeywordChange = {}
     )
