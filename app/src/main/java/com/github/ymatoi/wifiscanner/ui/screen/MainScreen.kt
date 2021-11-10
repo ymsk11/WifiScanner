@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.ymatoi.wifiscanner.ui.composables.ScanErrorDialog
 import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
 import com.github.ymatoi.wifiscanner.ui.composables.WifiCard
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -54,6 +55,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
 
     val isLoading = viewModel.isLoading
+    val isError = viewModel.isError
     val scanResultStates = viewModel.scanResultStates.collectAsState(initial = emptyList())
     val searchKeyword = viewModel.searchKeyword.collectAsState()
 
@@ -62,7 +64,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         scanResultStates = scanResultStates.value,
         onRefresh = onRefresh,
         searchKeyword = searchKeyword.value,
-        onValueSearchKeywordChange = { text -> viewModel.updateSearchKeyword(text) }
+        onValueSearchKeywordChange = { text -> viewModel.updateSearchKeyword(text) },
+        isError = isError.value,
+        onClickConfirmButton = { viewModel.closeErrorDialog() }
     )
 }
 
@@ -72,7 +76,9 @@ fun MainScreen(
     onValueSearchKeywordChange: (text: String) -> Unit,
     isRefreshing: Boolean,
     scanResultStates: List<ScanResultState>,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    isError: Boolean,
+    onClickConfirmButton: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -81,6 +87,7 @@ fun MainScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        ScanErrorDialog(openDialog = isError, onClickConfirmButton = onClickConfirmButton)
         TextField(
             value = searchKeyword,
             onValueChange = onValueSearchKeywordChange,
@@ -110,7 +117,9 @@ fun PreviewMainScreen() {
         scanResultStates = emptyList(),
         onRefresh = {},
         searchKeyword = "text",
-        onValueSearchKeywordChange = {}
+        onValueSearchKeywordChange = {},
+        isError = false,
+        onClickConfirmButton = {}
     )
 }
 
@@ -122,6 +131,8 @@ fun PreviewMainScreenLoading() {
         scanResultStates = emptyList(),
         onRefresh = {},
         searchKeyword = "text",
-        onValueSearchKeywordChange = {}
+        onValueSearchKeywordChange = {},
+        isError = false,
+        onClickConfirmButton = {}
     )
 }

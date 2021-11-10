@@ -22,6 +22,10 @@ class MainViewModel @Inject constructor(
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
+    private val _isError = mutableStateOf(false)
+    val isError: State<Boolean> = _isError
+    fun closeErrorDialog() { _isError.value = false }
+
     private val _scanResultStates = MutableStateFlow<List<ScanResultState>>(emptyList())
 
     private val _searchKeyword = MutableStateFlow("")
@@ -40,15 +44,18 @@ class MainViewModel @Inject constructor(
             when (it) {
                 is WifiScanRepository.State.Loading -> {
                     _isLoading.value = true
+                    _isError.value = false
                 }
                 is WifiScanRepository.State.Success -> {
                     _isLoading.value = false
+                    _isError.value = false
                     _scanResultStates.value = it.scanResults.map {
                         ScanResultState.create(it)
                     }.sortedBy { it.ssid }
                 }
                 is WifiScanRepository.State.Failure -> {
                     _isLoading.value = false
+                    _isError.value = true
                 }
             }
         }.launchIn(viewModelScope)
