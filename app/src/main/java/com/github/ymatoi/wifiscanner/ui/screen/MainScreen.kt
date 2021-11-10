@@ -5,10 +5,13 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -91,11 +94,30 @@ fun MainScreen(
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 .fillMaxWidth()
         )
-        WifiCardList(
-            scanResultStates = scanResultStates,
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            WifiCardList(
+                scanResultStates = scanResultStates,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh
+            )
+            if (scanResultStates.isEmpty()) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(
+                        text = "Swipe down to scan Wi-Fi APs",
+                        style = MaterialTheme.typography.h6,
+                    )
+                    Text(
+                        text = "Allow WifiScanner to access your device's fine location because of scanning Wi-Fi APs.",
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
+        }
     }
 }
 
