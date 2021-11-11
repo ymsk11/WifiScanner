@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.ymatoi.wifiscanner.ui.composables.ScanErrorDialog
 import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
+import com.github.ymatoi.wifiscanner.ui.composables.StartMessage
 import com.github.ymatoi.wifiscanner.ui.composables.WifiCardList
 import timber.log.Timber
 
@@ -106,16 +105,7 @@ fun MainScreen(
                 onRefresh = onRefresh
             )
             if (scanResultStates.isEmpty()) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    Text(
-                        text = "Swipe down to scan Wi-Fi APs",
-                        style = MaterialTheme.typography.h6,
-                    )
-                    Text(
-                        text = "Allow WifiScanner to access your device's fine location because of scanning Wi-Fi APs.",
-                        style = MaterialTheme.typography.body1
-                    )
-                }
+                StartMessage()
             }
         }
     }
