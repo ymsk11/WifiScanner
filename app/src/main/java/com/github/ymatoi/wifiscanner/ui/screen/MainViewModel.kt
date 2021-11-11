@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ymatoi.wifiscanner.repository.WifiScanRepository
-import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
+import com.github.ymatoi.wifiscanner.state.ScanResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

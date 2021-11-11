@@ -1,6 +1,5 @@
 package com.github.ymatoi.wifiscanner.ui.composables
 
-import android.net.wifi.ScanResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,26 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-data class ScanResultState(
-    val ssid: String,
-    val bssid: String,
-    val frequency: Int,
-    val level: Int,
-) {
-    val hz = when (frequency > 2500) {
-        true -> "5GHz"
-        else -> "2.4GHz"
-    }
-    companion object {
-        fun create(scanResult: ScanResult) = ScanResultState(
-            ssid = scanResult.SSID,
-            bssid = scanResult.BSSID,
-            frequency = scanResult.frequency,
-            level = scanResult.level,
-        )
-    }
-}
+import com.github.ymatoi.wifiscanner.state.ScanResultState
 
 @Composable
 fun WifiCard(state: ScanResultState) {

@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.ymatoi.wifiscanner.state.ScanResultState
 import com.github.ymatoi.wifiscanner.ui.composables.ScanErrorDialog
-import com.github.ymatoi.wifiscanner.ui.composables.ScanResultState
 import com.github.ymatoi.wifiscanner.ui.composables.StartMessage
 import com.github.ymatoi.wifiscanner.ui.composables.WifiCardList
 import timber.log.Timber
