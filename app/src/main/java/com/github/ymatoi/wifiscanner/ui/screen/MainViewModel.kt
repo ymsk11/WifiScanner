@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
     val searchKeyword: StateFlow<String> = _searchKeyword
 
     val scanResultStates = _scanResultStates.combine(_searchKeyword) { result, keyword ->
-        result.filter { it.ssid.contains(keyword) }
+        result.filter { it.ssid.contains(keyword) }.sortedByDescending { it.level }
     }
 
     fun updateSearchKeyword(text: String) {
@@ -51,7 +51,7 @@ class MainViewModel @Inject constructor(
                     _isError.value = false
                     _scanResultStates.value = it.scanResults.map {
                         ScanResultState.create(it)
-                    }.sortedBy { it.ssid }
+                    }
                 }
                 is WifiScanRepository.State.Failure -> {
                     _isLoading.value = false
