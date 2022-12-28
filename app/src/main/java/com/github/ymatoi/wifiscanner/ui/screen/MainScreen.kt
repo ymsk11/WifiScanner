@@ -4,13 +4,17 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
 import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -68,6 +72,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     searchKeyword: String,
@@ -78,35 +83,42 @@ fun MainScreen(
     isError: Boolean,
     onClickConfirmButton: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = onRefresh)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
+                TextField(
+                    value = searchKeyword,
+                    onValueChange = onValueSearchKeywordChange,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                        .fillMaxWidth()
+                )
+            })
+        }
     ) {
-        ScanErrorDialog(openDialog = isError, onClickConfirmButton = onClickConfirmButton)
-        TextField(
-            value = searchKeyword,
-            onValueChange = onValueSearchKeywordChange,
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                .fillMaxWidth()
-        )
         Box(
             modifier = Modifier
+                .pullRefresh(state)
                 .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(it),
             contentAlignment = Alignment.Center
         ) {
+            ScanErrorDialog(openDialog = isError, onClickConfirmButton = onClickConfirmButton)
             WifiCardList(
                 scanResultStates = scanResultStates,
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh
             )
             if (scanResultStates.isEmpty()) {
                 StartMessage()
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = state,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
