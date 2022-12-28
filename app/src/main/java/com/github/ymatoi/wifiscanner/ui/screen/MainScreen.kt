@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextField
@@ -69,7 +73,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     searchKeyword: String,
@@ -80,7 +84,7 @@ fun MainScreen(
     isError: Boolean,
     onClickConfirmButton: () -> Unit
 ) {
-    // val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = onRefresh)
+    val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = onRefresh)
 
     Scaffold(
         topBar = {
@@ -97,7 +101,7 @@ fun MainScreen(
     ) {
         Box(
             modifier = Modifier
-                // .pullRefresh(state)
+                .pullRefresh(state)
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(it),
@@ -111,13 +115,11 @@ fun MainScreen(
                 StartMessage()
             }
 
-            /*
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = state,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
-            */
         }
     }
 }
