@@ -1,7 +1,7 @@
 package com.github.ymatoi.wifiscanner.ui.composables
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +19,7 @@ fun WifiLevelMeter(level: Int, modifier: Modifier = Modifier) {
             level > -70 -> Color.Yellow
             else -> Color.Red
         },
-        backgroundColor = Color.Gray
+        trackColor = Color.Gray
     )
 }
 

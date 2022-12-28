@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,11 +14,10 @@ import com.github.ymatoi.wifiscanner.state.ScanResultState
 
 @Composable
 fun WifiCard(state: ScanResultState) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
-        elevation = 10.dp
     ) {
         Column {
             Column(modifier = Modifier.padding(8.dp)) {
