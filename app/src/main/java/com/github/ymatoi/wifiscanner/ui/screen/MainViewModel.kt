@@ -58,7 +58,6 @@ class MainViewModel @Inject constructor(
                     _isError.value = true
                 }
                 else -> {
-
                 }
             }
         }.launchIn(viewModelScope)
