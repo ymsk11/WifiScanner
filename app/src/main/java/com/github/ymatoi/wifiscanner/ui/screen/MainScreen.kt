@@ -9,12 +9,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -93,11 +93,11 @@ fun MainScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    TextField(
+                    OutlinedTextField(
                         value = searchKeyword,
                         onValueChange = onValueSearchKeywordChange,
                         modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                            .padding(8.dp)
                             .fillMaxWidth()
                     )
                 },
