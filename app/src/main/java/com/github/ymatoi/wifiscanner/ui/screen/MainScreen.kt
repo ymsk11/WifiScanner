@@ -98,10 +98,11 @@ fun MainScreen(
                         onValueChange = onValueSearchKeywordChange,
                         modifier = Modifier
                             .padding(8.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        singleLine = true
                     )
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
